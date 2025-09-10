@@ -8,12 +8,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      #  Checkout the repository
       - uses: actions/checkout@v4
+      #  Set up Python environment
       - uses: actions/setup-python@v5
         with:
           python-version: "3.x"
+      # Install PlatformIO CLI tool
       - name: Install PlatformIO
         run: pip install platformio
+      #  Download ArduinoJson library and place it in the lib folder
       - name: Download ArduinoJson library
         run: |
           mkdir -p lib/ArduinoJson
@@ -21,8 +25,10 @@ jobs:
           unzip -q lib/ArduinoJson.zip -d lib/
           mv lib/ArduinoJson-6.21.2 lib/ArduinoJson
           rm lib/ArduinoJson.zip
+      #  Build the project using PlatformIO CI
       - name: Build with PlatformIO CI
         run: pio ci --board=esp32dev --lib="lib" src
+      #  Upload the firmware binary as an artifact
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
