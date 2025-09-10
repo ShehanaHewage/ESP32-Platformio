@@ -14,8 +14,15 @@ jobs:
           python-version: "3.x"
       - name: Install PlatformIO
         run: pip install platformio
-      - name: Build with PlatformIO CI
-        run: pio ci --board=esp32dev --lib="lib" --library="ArduinoJson@6.21.2" src
+        - name: Download ArduinoJson library
+          run: |
+            mkdir -p lib/ArduinoJson
+            curl -L https://github.com/bblanchon/ArduinoJson/archive/refs/tags/v6.21.2.zip -o lib/ArduinoJson.zip
+            unzip -q lib/ArduinoJson.zip -d lib/
+            mv lib/ArduinoJson-6.21.2 lib/ArduinoJson
+            rm lib/ArduinoJson.zip
+        - name: Build with PlatformIO CI
+          run: pio ci --board=esp32dev --lib="lib" src
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
