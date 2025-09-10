@@ -13,8 +13,11 @@ jobs:
         with:
           python-version: "3.x"
       - run: pip install platformio
-      - run: pio run
 
+      # Compile using pio ci and include external libraries from lib folder
+      - run: pio ci --lib="lib" --project-conf platformio.ini
+
+      # Upload firmware or build artifacts
       - name: Upload firmware
         uses: actions/upload-artifact@v4
         with:
